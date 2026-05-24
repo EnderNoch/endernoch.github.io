@@ -4,7 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Przekierowanie...</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --md-sys-color-primary: #D0BCFF;
+      --md-sys-color-on-primary: #381E72;
+      --md-sys-color-primary-container: #4F378B;
+      --md-sys-color-on-primary-container: #EADDFF;
+      --md-sys-color-secondary: #CCC2DC;
+      --md-sys-color-on-secondary: #332D41;
+      --md-sys-color-surface: #141218;
+      --md-sys-color-surface-container-low: #1D1B20;
+      --md-sys-color-surface-container: #211F26;
+      --md-sys-color-surface-container-high: #2B2930;
+      --md-sys-color-surface-container-highest: #36343B;
+      --md-sys-color-on-surface: #E6E1E5;
+      --md-sys-color-on-surface-variant: #CAC4D0;
+      --md-sys-color-outline: #938F99;
+      --md-sys-color-outline-variant: #49454F;
+      --md-ref-typeface-brand: 'Google Sans', 'Google Sans Display', system-ui, sans-serif;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -12,25 +34,101 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0d0d0d;
-      color: #e0e0e0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      font-family: var(--md-ref-typeface-brand);
+      overflow: hidden;
     }
 
-    .container {
+    /* Animated background blobs */
+    .bg-blobs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: float-blob 12s ease-in-out infinite;
+    }
+
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+      background: #D0BCFF;
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .blob-2 {
+      width: 300px;
+      height: 300px;
+      background: #CCC2DC;
+      bottom: -80px;
+      right: -80px;
+      animation-delay: -4s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: #B69DF8;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -8s;
+    }
+
+    @keyframes float-blob {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    /* Main card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--md-sys-color-surface-container);
+      border-radius: 28px;
+      padding: 2.5rem 2.5rem 2rem;
+      width: min(380px, calc(100vw - 2rem));
       text-align: center;
-      padding: 2rem;
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        0 4px 6px rgba(0,0,0,0.15),
+        0 12px 20px rgba(0,0,0,0.12);
+      animation: card-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
+    @keyframes card-enter {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Timer ring */
     .timer-ring {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 140px;
+      height: 140px;
       margin: 0 auto 2rem;
     }
 
     .timer-ring svg {
       transform: rotate(-90deg);
+      filter: drop-shadow(0 0 12px rgba(208, 188, 255, 0.3));
     }
 
     .timer-ring circle {
@@ -39,79 +137,189 @@
     }
 
     .track {
-      stroke: #2a2a2a;
+      stroke: var(--md-sys-color-surface-container-highest);
     }
 
     .progress {
-      stroke: #7c3aed;
+      stroke: var(--md-sys-color-primary);
       stroke-linecap: round;
-      stroke-dasharray: 314;
+      stroke-dasharray: 376;
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear;
     }
 
-    .timer-number {
+    .timer-center {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 2.5rem;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-number {
+      font-size: 3rem;
       font-weight: 700;
-      color: #7c3aed;
+      color: var(--md-sys-color-primary);
+      line-height: 1;
+      letter-spacing: -1px;
+      animation: pulse-number 1s ease-in-out;
     }
 
-    h1 {
-      font-size: 1.4rem;
+    @keyframes pulse-number {
+      0% { transform: scale(1.2); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .timer-label {
+      font-size: 0.65rem;
       font-weight: 500;
+      color: var(--md-sys-color-on-surface-variant);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Headline */
+    h1 {
+      font-size: 1.375rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
       margin-bottom: 0.5rem;
-      color: #c0c0c0;
     }
 
-    .url-display {
-      font-size: 0.9rem;
-      color: #666;
-      word-break: break-all;
-      max-width: 400px;
-      margin: 0 auto 1.5rem;
+    /* URL chip */
+    .url-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: 12px;
+      padding: 0.5rem 0.875rem;
+      margin: 0.875rem 0 1.5rem;
+      max-width: 100%;
+      overflow: hidden;
     }
 
+    .url-chip-icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    .url-chip-text {
+      font-size: 0.8rem;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Button */
     .btn {
-      display: inline-block;
-      padding: 0.6rem 1.4rem;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background: transparent;
-      color: #aaa;
-      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.75rem 1.75rem;
+      border: none;
+      border-radius: 50px;
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      font-family: var(--md-ref-typeface-brand);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
       cursor: pointer;
       text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
+      transition:
+        background 0.2s,
+        transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: currentColor;
+      opacity: 0;
+      border-radius: inherit;
+      transition: opacity 0.2s;
     }
 
     .btn:hover {
-      border-color: #7c3aed;
-      color: #7c3aed;
+      background: #6142a8;
+      transform: scale(1.04);
+      box-shadow: 0 4px 14px rgba(208, 188, 255, 0.25);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn svg {
+      flex-shrink: 0;
+    }
+
+    /* Bottom hint */
+    .hint {
+      margin-top: 1.25rem;
+      font-size: 0.75rem;
+      color: var(--md-sys-color-outline);
+      letter-spacing: 0.01em;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="card">
     <div class="timer-ring">
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <circle class="track" cx="60" cy="60" r="50" />
-        <circle class="progress" id="progress" cx="60" cy="60" r="50" />
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle class="track" cx="70" cy="70" r="60" />
+        <circle class="progress" id="progress" cx="70" cy="70" r="60" />
       </svg>
-      <span class="timer-number" id="countdown">3</span>
+      <div class="timer-center">
+        <span class="timer-number" id="countdown">3</span>
+        <span class="timer-label">sek</span>
+      </div>
     </div>
 
-    <h1>Przekierowanie za <span id="sec">3</span> s...</h1>
-    <p class="url-display" id="target-url"></p>
-    <a class="btn" id="go-now" href="#">Przejdź teraz</a>
+    <h1>Trwa przekierowanie&hellip;</h1>
+
+    <div class="url-chip">
+      <svg class="url-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+      </svg>
+      <span class="url-chip-text" id="target-url">Ładowanie…</span>
+    </div>
+
+    <a class="btn" id="go-now" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      Przejdź teraz
+    </a>
+
+    <p class="hint">Za <span id="sec">3</span>&nbsp;s nastąpi automatyczne przekierowanie</p>
   </div>
 
   <script>
     const TOTAL = 3;
-    const CIRCUMFERENCE = 2 * Math.PI * 50; // ~314
+    const R = 60;
+    const CIRCUMFERENCE = 2 * Math.PI * R;
 
     async function init() {
       let target = '#';
@@ -137,6 +345,12 @@
 
       function tick() {
         remaining -= 1;
+
+        // Restart pulse animation
+        countdownEl.style.animation = 'none';
+        countdownEl.offsetHeight; // reflow
+        countdownEl.style.animation = 'pulse-number 1s ease-in-out';
+
         countdownEl.textContent = remaining;
         secEl.textContent = remaining;
 
