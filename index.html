@@ -9,22 +9,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Android 16 Baklava — standardowy dark mode (system blue, neutralne szarości) */
-      --md-sys-color-primary: #82B4FF;
-      --md-sys-color-on-primary: #002F6A;
-      --md-sys-color-primary-container: #004494;
-      --md-sys-color-on-primary-container: #D6E3FF;
-      --md-sys-color-secondary: #B8C8E8;
-      --md-sys-color-on-secondary: #223248;
-      --md-sys-color-surface: #111318;
-      --md-sys-color-surface-container-low: #191C20;
-      --md-sys-color-surface-container: #1D2025;
-      --md-sys-color-surface-container-high: #272A2F;
-      --md-sys-color-surface-container-highest: #32353A;
-      --md-sys-color-on-surface: #E3E2E8;
-      --md-sys-color-on-surface-variant: #C4C6D0;
-      --md-sys-color-outline: #8E9099;
-      --md-sys-color-outline-variant: #44474F;
+      /* Material 3 Expressive / Android 16 Baklava dark */
+      --md-primary:              #D0BCFF;
+      --md-on-primary:           #381E72;
+      --md-primary-container:    #4F378B;
+      --md-on-primary-container: #EADDFF;
+      --md-secondary:            #CCC2DC;
+      --md-secondary-container:  #4A4458;
+      --md-on-secondary-container: #E8DEF8;
+      --md-bg:                   #141218;
+      --md-on-surface:           #E6E1E5;
+      --md-on-surface-variant:   #CAC4D0;
+      --md-outline:              #938F99;
+      --md-outline-variant:      #49454F;
+      --md-surface-container-lowest:  #0F0D13;
+      --md-surface-container-low:     #1D1B20;
+      --md-surface-container:         #211F26;
+      --md-surface-container-high:    #2B2930;
+      --md-surface-container-highest: #36343B;
       --md-ref-typeface-brand: 'Google Sans', 'Google Sans Display', system-ui, sans-serif;
     }
 
@@ -35,8 +37,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--md-sys-color-surface);
-      color: var(--md-sys-color-on-surface);
+      background: var(--md-bg);
+      color: var(--md-on-surface);
       font-family: var(--md-ref-typeface-brand);
       overflow: hidden;
     }
@@ -61,7 +63,7 @@
     .blob-1 {
       width: 400px;
       height: 400px;
-      background: #3A6FD8;
+      background: #D0BCFF;
       top: -100px;
       left: -100px;
       animation-delay: 0s;
@@ -70,7 +72,7 @@
     .blob-2 {
       width: 300px;
       height: 300px;
-      background: #5B8DEF;
+      background: #CCC2DC;
       bottom: -80px;
       right: -80px;
       animation-delay: -4s;
@@ -79,7 +81,7 @@
     .blob-3 {
       width: 200px;
       height: 200px;
-      background: #2A5FBF;
+      background: #B69DF8;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -96,7 +98,7 @@
     .card {
       position: relative;
       z-index: 1;
-      background: var(--md-sys-color-surface-container);
+      background: var(--md-surface-container);
       border-radius: 28px;
       padding: 2.5rem 2.5rem 2rem;
       width: min(380px, calc(100vw - 2rem));
@@ -129,7 +131,7 @@
 
     .timer-ring svg {
       transform: rotate(-90deg);
-      filter: drop-shadow(0 0 14px rgba(130, 180, 255, 0.3));
+      filter: drop-shadow(0 0 14px rgba(208, 188, 255, 0.3));
     }
 
     .timer-ring circle {
@@ -138,11 +140,11 @@
     }
 
     .track {
-      stroke: var(--md-sys-color-surface-container-highest);
+      stroke: var(--md-surface-container-highest);
     }
 
     .progress {
-      stroke: var(--md-sys-color-primary);
+      stroke: var(--md-primary);
       stroke-linecap: round;
       stroke-dasharray: 376;
       stroke-dashoffset: 0;
@@ -161,7 +163,7 @@
     .timer-number {
       font-size: 3rem;
       font-weight: 700;
-      color: var(--md-sys-color-primary);
+      color: var(--md-primary);
       line-height: 1;
       letter-spacing: -1px;
       animation: pulse-number 1s ease-in-out;
@@ -175,7 +177,7 @@
     .timer-label {
       font-size: 0.65rem;
       font-weight: 500;
-      color: var(--md-sys-color-on-surface-variant);
+      color: var(--md-on-surface-variant);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-top: 2px;
@@ -185,7 +187,7 @@
     h1 {
       font-size: 1.375rem;
       font-weight: 500;
-      color: var(--md-sys-color-on-surface);
+      color: var(--md-on-surface);
       letter-spacing: -0.01em;
       line-height: 1.35;
       margin-bottom: 0.5rem;
@@ -196,8 +198,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: var(--md-sys-color-surface-container-high);
-      border: 1px solid var(--md-sys-color-outline-variant);
+      background: var(--md-surface-container-high);
+      border: 1px solid var(--md-outline-variant);
       border-radius: 12px;
       padding: 0.5rem 0.875rem;
       margin: 0.875rem 0 1.5rem;
@@ -214,7 +216,7 @@
 
     .url-chip-text {
       font-size: 0.8rem;
-      color: var(--md-sys-color-on-surface-variant);
+      color: var(--md-on-surface-variant);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -229,8 +231,8 @@
       padding: 0.75rem 1.75rem;
       border: none;
       border-radius: 50px;
-      background: var(--md-sys-color-primary-container);
-      color: var(--md-sys-color-on-primary-container);
+      background: var(--md-primary-container);
+      color: var(--md-on-primary-container);
       font-family: var(--md-ref-typeface-brand);
       font-size: 0.875rem;
       font-weight: 500;
@@ -256,9 +258,9 @@
     }
 
     .btn:hover {
-      background: #1A5CB8;
+      background: #6142A8;
       transform: scale(1.04);
-      box-shadow: 0 4px 16px rgba(130, 180, 255, 0.25);
+      box-shadow: 0 4px 16px rgba(208, 188, 255, 0.25);
     }
 
     .btn:active {
@@ -273,7 +275,7 @@
     .hint {
       margin-top: 1.25rem;
       font-size: 0.75rem;
-      color: var(--md-sys-color-outline);
+      color: var(--md-outline);
       letter-spacing: 0.01em;
     }
   </style>
