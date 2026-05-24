@@ -319,6 +319,51 @@
     .btn:active { transform: scale(0.97); }
     .btn svg { flex-shrink: 0; }
 
+    /* ── Action row ── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ── Stop button ── */
+    .btn-stop {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.75rem 1.75rem;
+      border: 1px solid var(--md-outline-variant);
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--md-on-surface-variant);
+      font-family: var(--md-ref-typeface-brand);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, color .2s,
+                  transform .15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-stop:hover {
+      background: var(--md-surface-container-high);
+      border-color: var(--md-outline);
+      color: var(--md-on-surface);
+    }
+
+    .btn-stop:active { transform: scale(0.97); }
+    .btn-stop svg { flex-shrink: 0; }
+
+    .btn-stop.stopped {
+      border-color: var(--md-outline-variant);
+      color: var(--md-outline);
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
     /* ── Bottom hint ── */
     .hint {
       margin-top: 1.25rem;
@@ -382,14 +427,23 @@
       <span class="url-chip-text" id="target-url">Ładowanie…</span>
     </div>
 
-    <a class="btn" id="go-now" href="#">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-      Przejdź teraz
-    </a>
+    <div class="action-row">
+      <a class="btn" id="go-now" href="#">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+        Przejdź teraz
+      </a>
 
-    <p class="hint">Za <span id="sec">3</span>&nbsp;s nastąpi automatyczne przekierowanie</p>
+      <button class="btn-stop" id="btn-stop" title="Zatrzymaj przekierowanie">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3"/>
+        </svg>
+        Stop
+      </button>
+    </div>
+
+    <p class="hint" id="hint-text">Za <span id="sec">3</span>&nbsp;s nastąpi automatyczne przekierowanie</p>
   </div>
 
   <script>
@@ -434,14 +488,35 @@
 
       const progressEl = document.getElementById('progress');
       const countdownEl = document.getElementById('countdown');
-      const secEl = document.getElementById('sec');
+      const secEl       = document.getElementById('sec');
+      const hintEl      = document.getElementById('hint-text');
+      const stopBtn     = document.getElementById('btn-stop');
 
       progressEl.style.strokeDasharray = CIRCUMFERENCE;
       progressEl.style.strokeDashoffset = 0;
 
       let remaining = TOTAL;
+      let stopped   = false;
+      let timerId   = null;
+
+      stopBtn.addEventListener('click', () => {
+        if (stopped) return;
+        stopped = true;
+        clearTimeout(timerId);
+
+        stopBtn.classList.add('stopped');
+        stopBtn.innerHTML = `
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+          </svg>
+          Zatrzymano`;
+
+        progressEl.style.transition = 'none';
+        hintEl.textContent = 'Przekierowanie anulowane.';
+      });
 
       function tick() {
+        if (stopped) return;
         remaining -= 1;
 
         countdownEl.style.animation = 'none';
@@ -449,7 +524,7 @@
         countdownEl.style.animation = 'pulse-number 1s ease-in-out';
 
         countdownEl.textContent = remaining;
-        secEl.textContent = remaining;
+        if (secEl) secEl.textContent = remaining;
 
         const offset = CIRCUMFERENCE * (1 - remaining / TOTAL);
         progressEl.style.strokeDashoffset = offset;
@@ -457,11 +532,11 @@
         if (remaining <= 0) {
           window.location.href = target;
         } else {
-          setTimeout(tick, 1000);
+          timerId = setTimeout(tick, 1000);
         }
       }
 
-      setTimeout(tick, 1000);
+      timerId = setTimeout(tick, 1000);
     }
 
     init();
