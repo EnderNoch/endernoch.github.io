@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Przekierowanie...</title>
+  <script>
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+      document.documentElement.classList.add('is-mobile');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Material 3 Expressive / Android 16 Baklava dark */
+      /* Material 3 Expressive / Android 16 Baklava — dark (default) */
       --md-primary:              #D0BCFF;
       --md-on-primary:           #381E72;
       --md-primary-container:    #4F378B;
@@ -30,7 +34,53 @@
       --md-ref-typeface-brand: 'Google Sans', 'Google Sans Display', system-ui, sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ── Light mode tokens ── */
+    [data-theme="light"] {
+      --md-primary:              #6750A4;
+      --md-on-primary:           #FFFFFF;
+      --md-primary-container:    #EADDFF;
+      --md-on-primary-container: #21005D;
+      --md-secondary:            #625B71;
+      --md-secondary-container:  #E8DEF8;
+      --md-on-secondary-container: #1D192B;
+      --md-bg:                   #FFFBFE;
+      --md-on-surface:           #1C1B1F;
+      --md-on-surface-variant:   #49454F;
+      --md-outline:              #79747E;
+      --md-outline-variant:      #CAC4D0;
+      --md-surface-container-lowest:  #FFFFFF;
+      --md-surface-container-low:     #F7F2FA;
+      --md-surface-container:         #F3EDF7;
+      --md-surface-container-high:    #ECE6F0;
+      --md-surface-container-highest: #E6E0E9;
+    }
+
+    /* ── Auto: light when system is light ── */
+    @media (prefers-color-scheme: light) {
+      [data-theme="auto"] {
+        --md-primary:              #6750A4;
+        --md-on-primary:           #FFFFFF;
+        --md-primary-container:    #EADDFF;
+        --md-on-primary-container: #21005D;
+        --md-secondary:            #625B71;
+        --md-secondary-container:  #E8DEF8;
+        --md-on-secondary-container: #1D192B;
+        --md-bg:                   #FFFBFE;
+        --md-on-surface:           #1C1B1F;
+        --md-on-surface-variant:   #49454F;
+        --md-outline:              #79747E;
+        --md-outline-variant:      #CAC4D0;
+        --md-surface-container-lowest:  #FFFFFF;
+        --md-surface-container-low:     #F7F2FA;
+        --md-surface-container:         #F3EDF7;
+        --md-surface-container-high:    #ECE6F0;
+        --md-surface-container-highest: #E6E0E9;
+      }
+    }
+
+    html { transition: background .25s, color .25s; }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       min-height: 100vh;
@@ -41,9 +91,10 @@
       color: var(--md-on-surface);
       font-family: var(--md-ref-typeface-brand);
       overflow: hidden;
+      transition: background .25s, color .25s;
     }
 
-    /* Animated background blobs */
+    /* ── Animated background blobs ── */
     .bg-blobs {
       position: fixed;
       inset: 0;
@@ -60,41 +111,59 @@
       animation: float-blob 12s ease-in-out infinite;
     }
 
-    .blob-1 {
-      width: 400px;
-      height: 400px;
-      background: #D0BCFF;
-      top: -100px;
-      left: -100px;
-      animation-delay: 0s;
-    }
-
-    .blob-2 {
-      width: 300px;
-      height: 300px;
-      background: #CCC2DC;
-      bottom: -80px;
-      right: -80px;
-      animation-delay: -4s;
-    }
-
-    .blob-3 {
-      width: 200px;
-      height: 200px;
-      background: #B69DF8;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation-delay: -8s;
-    }
+    .blob-1 { width: 400px; height: 400px; background: #D0BCFF; top: -100px; left: -100px; animation-delay: 0s; }
+    .blob-2 { width: 300px; height: 300px; background: #CCC2DC; bottom: -80px; right: -80px; animation-delay: -4s; }
+    .blob-3 { width: 200px; height: 200px; background: #B69DF8; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -8s; }
 
     @keyframes float-blob {
       0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.05); }
-      66% { transform: translate(-20px, 15px) scale(0.95); }
+      33%       { transform: translate(30px, -20px) scale(1.05); }
+      66%       { transform: translate(-20px, 15px) scale(0.95); }
     }
 
-    /* Main card */
+    /* ── Theme toggle (segmented pill) ── */
+    .theme-toggle {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      background: var(--md-surface-container-highest);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 2px;
+      transition: background .25s;
+      z-index: 2;
+    }
+
+    .theme-btn {
+      border: none;
+      background: transparent;
+      border-radius: 9999px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--md-on-surface-variant);
+      transition: background .2s, color .2s, transform .15s cubic-bezier(.34,1.56,.64,1);
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .theme-btn:active { transform: scale(.88); }
+
+    .theme-btn.active {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+    }
+
+    .icon-mobile { display: none; }
+    html.is-mobile .icon-desktop { display: none; }
+    html.is-mobile .icon-mobile  { display: block; }
+
+    /* ── Main card ── */
     .card {
       position: relative;
       z-index: 1;
@@ -108,20 +177,15 @@
         0 4px 6px rgba(0,0,0,0.15),
         0 12px 20px rgba(0,0,0,0.12);
       animation: card-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      transition: background .25s, box-shadow .25s;
     }
 
     @keyframes card-enter {
-      from {
-        opacity: 0;
-        transform: translateY(24px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(24px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Timer ring */
+    /* ── Timer ring ── */
     .timer-ring {
       position: relative;
       width: 140px;
@@ -134,21 +198,15 @@
       filter: drop-shadow(0 0 14px rgba(208, 188, 255, 0.3));
     }
 
-    .timer-ring circle {
-      fill: none;
-      stroke-width: 6;
-    }
+    .timer-ring circle { fill: none; stroke-width: 6; }
 
-    .track {
-      stroke: var(--md-surface-container-highest);
-    }
-
+    .track    { stroke: var(--md-surface-container-highest); }
     .progress {
       stroke: var(--md-primary);
       stroke-linecap: round;
       stroke-dasharray: 376;
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear;
+      transition: stroke-dashoffset 1s linear, stroke .25s;
     }
 
     .timer-center {
@@ -167,11 +225,12 @@
       line-height: 1;
       letter-spacing: -1px;
       animation: pulse-number 1s ease-in-out;
+      transition: color .25s;
     }
 
     @keyframes pulse-number {
-      0% { transform: scale(1.2); opacity: 0.6; }
-      100% { transform: scale(1); opacity: 1; }
+      0%   { transform: scale(1.2); opacity: 0.6; }
+      100% { transform: scale(1);   opacity: 1; }
     }
 
     .timer-label {
@@ -183,7 +242,7 @@
       margin-top: 2px;
     }
 
-    /* Headline */
+    /* ── Headline ── */
     h1 {
       font-size: 1.375rem;
       font-weight: 500;
@@ -193,7 +252,7 @@
       margin-bottom: 0.5rem;
     }
 
-    /* URL chip */
+    /* ── URL chip ── */
     .url-chip {
       display: inline-flex;
       align-items: center;
@@ -205,14 +264,10 @@
       margin: 0.875rem 0 1.5rem;
       max-width: 100%;
       overflow: hidden;
+      transition: background .25s, border-color .25s;
     }
 
-    .url-chip-icon {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
-      opacity: 0.6;
-    }
+    .url-chip-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.6; }
 
     .url-chip-text {
       font-size: 0.8rem;
@@ -222,7 +277,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Button */
+    /* ── Button ── */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -230,7 +285,7 @@
       gap: 8px;
       padding: 0.75rem 1.75rem;
       border: none;
-      border-radius: 50px;
+      border-radius: 9999px;
       background: var(--md-primary-container);
       color: var(--md-on-primary-container);
       font-family: var(--md-ref-typeface-brand);
@@ -239,10 +294,7 @@
       letter-spacing: 0.01em;
       cursor: pointer;
       text-decoration: none;
-      transition:
-        background 0.2s,
-        transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.2s;
+      transition: background .2s, transform .15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .2s;
       position: relative;
       overflow: hidden;
     }
@@ -254,24 +306,20 @@
       background: currentColor;
       opacity: 0;
       border-radius: inherit;
-      transition: opacity 0.2s;
+      transition: opacity .2s;
     }
 
     .btn:hover {
-      background: #6142A8;
+      background: var(--md-primary);
+      color: var(--md-on-primary);
       transform: scale(1.04);
       box-shadow: 0 4px 16px rgba(208, 188, 255, 0.25);
     }
 
-    .btn:active {
-      transform: scale(0.97);
-    }
+    .btn:active { transform: scale(0.97); }
+    .btn svg { flex-shrink: 0; }
 
-    .btn svg {
-      flex-shrink: 0;
-    }
-
-    /* Bottom hint */
+    /* ── Bottom hint ── */
     .hint {
       margin-top: 1.25rem;
       font-size: 0.75rem;
@@ -288,6 +336,31 @@
   </div>
 
   <div class="card">
+    <div class="theme-toggle" id="theme-toggle">
+      <button class="theme-btn active" data-mode="auto" title="Auto (systemowy)">
+        <svg class="icon-desktop" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/>
+        </svg>
+        <svg class="icon-mobile" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+        </svg>
+      </button>
+      <button class="theme-btn" data-mode="light" title="Jasny">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2"  x2="12" y2="5"/>  <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/> <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+          <line x1="2" y1="12" x2="5"  y2="12"/>  <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/> <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+      <button class="theme-btn" data-mode="dark" title="Ciemny">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+
     <div class="timer-ring">
       <svg width="140" height="140" viewBox="0 0 140 140">
         <circle class="track" cx="70" cy="70" r="60" />
@@ -320,6 +393,28 @@
   </div>
 
   <script>
+    // ── Theme toggle ──────────────────────────────────────
+    (function () {
+      const saved = localStorage.getItem('theme') || 'auto';
+      document.documentElement.dataset.theme = saved;
+
+      function applyTheme(mode) {
+        document.documentElement.dataset.theme = mode;
+        localStorage.setItem('theme', mode);
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+      }
+
+      document.getElementById('theme-toggle').addEventListener('click', e => {
+        const btn = e.target.closest('.theme-btn');
+        if (btn) applyTheme(btn.dataset.mode);
+      });
+
+      applyTheme(saved);
+    })();
+
+    // ── Redirect timer ────────────────────────────────────
     const TOTAL = 3;
     const R = 60;
     const CIRCUMFERENCE = 2 * Math.PI * R;
@@ -349,9 +444,8 @@
       function tick() {
         remaining -= 1;
 
-        // Restart pulse animation
         countdownEl.style.animation = 'none';
-        countdownEl.offsetHeight; // reflow
+        countdownEl.offsetHeight;
         countdownEl.style.animation = 'pulse-number 1s ease-in-out';
 
         countdownEl.textContent = remaining;
