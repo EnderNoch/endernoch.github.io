@@ -50,7 +50,7 @@
         <circle class="progress" id="progress" cx="70" cy="70" r="60" />
       </svg>
       <div class="timer-center">
-        <span class="timer-number" id="countdown">3</span>
+        <span class="timer-number" id="countdown">5</span>
         <span class="timer-label">sek</span>
       </div>
     </div>
@@ -81,7 +81,7 @@
       </button>
     </div>
 
-    <p class="hint" id="hint-text">Za <span id="sec">3</span>&nbsp;s nastąpi automatyczne przekierowanie</p>
+    <p class="hint" id="hint-text">Za <span id="sec">5</span>&nbsp;s nastąpi automatyczne przekierowanie</p>
   </div>
 
   <script>
@@ -107,7 +107,7 @@
     })();
 
     // ── Redirect timer ────────────────────────────────────
-    const TOTAL = 3;
+    const TOTAL = 5;
     const R = 60;
     const CIRCUMFERENCE = 2 * Math.PI * R;
     async function init() {
@@ -149,7 +149,9 @@
           </svg>
           Zatrzymano`;
 
+        const currentOffset = CIRCUMFERENCE * (1 - remaining / TOTAL);
         progressEl.style.transition = 'none';
+        progressEl.style.strokeDashoffset = currentOffset;
         hintEl.textContent = 'Przekierowanie anulowane.';
       });
 
