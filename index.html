@@ -110,14 +110,13 @@
     const TOTAL = 3;
     const R = 60;
     const CIRCUMFERENCE = 2 * Math.PI * R;
-    const REDIRECT_URL = 'https://endernoch.github.io/fiszki-csv/';
-
     async function init() {
-      let target = REDIRECT_URL;
+      let target = '#';
       try {
         const res = await fetch('redirect.json?_=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
-        target = data.url || REDIRECT_URL;
+        target = data.url;
       } catch (e) {
         console.error('Nie udało się wczytać redirect.json', e);
       }
